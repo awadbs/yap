@@ -92,6 +92,9 @@ class MyLogin extends StatelessWidget {
     // container for display. main.
     return Consumer<InitialDevices>(builder: (context, devices, child) {
       return CupertinoPageScaffold(
+        navigationBar: const CupertinoNavigationBar(
+          middle: Text('Select Two Devices'),
+        ),
         child: Center(
           child: Container(
             padding: const EdgeInsets.all(10.0),

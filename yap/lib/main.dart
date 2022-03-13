@@ -7,6 +7,8 @@ import 'dart:math';
 // our pages
 import 'package:yap/screens/InitialPage.dart';
 import 'package:yap/screens/TargetPage.dart';
+import 'package:yap/screens/DistancePage.dart';
+
 import 'package:yap/models/InitialDevices.dart';
 import 'package:yap/models/ListServices.dart';
 
@@ -34,6 +36,7 @@ class MyApp extends StatelessWidget {
             '/': (context) => MyLogin(),
             '/blePage': (context) => const MyHomePage(title: 'Start Page'),
             '/TargetPage': (context) => const TargetPage(),
+            '/DistancePage': (context) => const DistancePage(),
           },
         ));
   }

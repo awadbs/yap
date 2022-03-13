@@ -58,7 +58,7 @@ class InitialDevices extends ChangeNotifier {
   }
 
   isTargetConnectedNext() {
-    if (targetDevicesList.isEmpty) {
+    if (!targetDevicesList.isEmpty) {
       return true;
     } else {
       return false;

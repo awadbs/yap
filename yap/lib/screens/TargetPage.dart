@@ -88,6 +88,9 @@ class TargetPage extends StatelessWidget {
 
     return Consumer<InitialDevices>(builder: (context, devices, child) {
       return CupertinoPageScaffold(
+        navigationBar: const CupertinoNavigationBar(
+          middle: Text('Select Target Device to Locate'),
+        ),
         child: Center(
           child: Container(
             padding: const EdgeInsets.all(10.0),
