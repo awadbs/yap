@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'dart:math';
 
 // our pages
 import 'package:yap/screens/InitialPage.dart';
+import 'package:yap/models/InitialDevices.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,17 +18,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Yap',
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const MyLogin(),
-        '/blePage': (context) => const MyHomePage(title: 'Start Page'),
-      },
-    );
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => InitialDevices()),
+        ],
+        child: CupertinoApp(
+          title: 'Yap',
+          theme: CupertinoThemeData(
+            primaryColor: Color.fromARGB(255, 12, 165, 114),
+          ),
+          initialRoute: '/',
+          routes: {
+            '/': (context) => MyLogin(),
+            '/blePage': (context) => const MyHomePage(title: 'Start Page'),
+          },
+        ));
   }
 }
 
