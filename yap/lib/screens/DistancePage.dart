@@ -14,6 +14,7 @@ class DistancePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FlutterBlue flutterBlue = FlutterBlue.instance;
+    var rssiReading = 70 % 15;
     scanForDevices() {
       var initDevices = context.read<InitialDevices>();
       initDevices.resetDevicesList();
@@ -35,7 +36,7 @@ class DistancePage extends StatelessWidget {
             height: 250,
             width: 250,
             padding: const EdgeInsets.all(10.0),
-            child: Text("50 ft"),
+            child: Text(rssiReading.toString() + "ft."),
           ),
         ),
       );
