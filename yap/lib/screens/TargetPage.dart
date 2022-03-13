@@ -14,7 +14,7 @@ class TargetPage extends StatelessWidget {
     List<BluetoothService> _services;
 
     _goToNextPage() {
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.pushReplacementNamed(context, '/DistancePage');
     }
 
     scanForDevices() {
