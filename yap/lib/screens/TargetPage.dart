@@ -1,6 +1,3 @@
-// Copyright 2020 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -8,22 +5,21 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:yap/models/InitialDevices.dart';
 import 'package:yap/models/ListServices.dart';
 
-class MyLogin extends StatelessWidget {
-  const MyLogin({Key? key}) : super(key: key);
+class TargetPage extends StatelessWidget {
+  const TargetPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     FlutterBlue flutterBlue = FlutterBlue.instance;
     List<BluetoothService> _services;
-    // once pressed, will navigate to the bluetooth next page.
+
     _goToNextPage() {
-      Navigator.pushReplacementNamed(context, '/TargetPage');
+      Navigator.pushReplacementNamed(context, '/');
     }
 
-    // this creates a scan for devices
     scanForDevices() {
       var initDevices = context.read<InitialDevices>();
-
+      initDevices.resetDevicesList();
       flutterBlue.startScan(timeout: Duration(seconds: 2));
       flutterBlue.scanResults.listen((List<ScanResult> results) {
         for (ScanResult result in results) {
@@ -60,25 +56,26 @@ class MyLogin extends StatelessWidget {
                         'Connect',
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: devices.isConnected(devices.devicesList[index])
-                          ? null
-                          : () async {
-                              flutterBlue.stopScan();
-                              try {
-                                await devices.devicesList[index].connect();
-                              } catch (e) {
-                                // if (e.code != 'already_connected') {
-                                //   throw e;
-                                // }
-                                print(e);
-                              } finally {
-                                _services = await devices.devicesList[index]
-                                    .discoverServices();
-                              }
+                      onPressed:
+                          devices.isTargetConnected(devices.devicesList[index])
+                              ? null
+                              : () async {
+                                  flutterBlue.stopScan();
+                                  try {
+                                    await devices.devicesList[index].connect();
+                                  } catch (e) {
+                                    // if (e.code != 'already_connected') {
+                                    //   throw e;
+                                    // }
+                                    print(e);
+                                  } finally {
+                                    _services = await devices.devicesList[index]
+                                        .discoverServices();
+                                  }
 
-                              devices.addConnectedDeviceTolist(
-                                  devices.devicesList[index], _services);
-                            },
+                                  devices.addTargetDeviceTolist(
+                                      devices.devicesList[index], _services);
+                                },
                     ),
                   ],
                 ),
@@ -89,7 +86,6 @@ class MyLogin extends StatelessWidget {
       );
     }
 
-    // container for display. main.
     return Consumer<InitialDevices>(builder: (context, devices, child) {
       return CupertinoPageScaffold(
         child: Center(
@@ -109,7 +105,7 @@ class MyLogin extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 CupertinoButton.filled(
-                  onPressed: (!devices.areTwoDevicesConnected()
+                  onPressed: (!devices.isTargetConnectedNext()
                       ? null
                       : () => _goToNextPage()),
                   child: Text('Continue'),

@@ -7,11 +7,29 @@ class InitialDevices extends ChangeNotifier {
   late BluetoothDevice _devices;
 
   final FlutterBlue flutterBlue = FlutterBlue.instance;
-  final List<BluetoothDevice> devicesList = <BluetoothDevice>[];
+  List<BluetoothDevice> devicesList = <BluetoothDevice>[];
 
   //final List<BluetoothDevice> connectedDevicesList = <BluetoothDevice>[];
   Map<BluetoothDevice, List<BluetoothService>> connectedDevicesList =
       new HashMap();
+
+  final List<BluetoothDevice> targetDevicesList = <BluetoothDevice>[];
+  Map<BluetoothDevice, List<BluetoothService>> targetDeviceService =
+      new HashMap();
+
+  addTargetDeviceTolist(
+      final BluetoothDevice device, List<BluetoothService> service) {
+    // we don't want to add same devices to the list.
+    if (!targetDevicesList.contains(device)) {
+      targetDevicesList.add(device);
+      targetDeviceService[device] = service;
+      notifyListeners();
+    }
+  }
+
+  resetDevicesList() {
+    this.devicesList = <BluetoothDevice>[];
+  }
 
   /// The current total price of all items.
 
@@ -28,6 +46,22 @@ class InitialDevices extends ChangeNotifier {
     if (!devicesList.contains(device)) {
       devicesList.add(device);
       notifyListeners();
+    }
+  }
+
+  isTargetConnected(final BluetoothDevice device) {
+    if (targetDevicesList.contains(device)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isTargetConnectedNext() {
+    if (targetDevicesList.isEmpty) {
+      return true;
+    } else {
+      return false;
     }
   }
 
