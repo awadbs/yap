@@ -10,6 +10,10 @@ import 'package:yap/models/ListServices.dart';
 
 class MyLogin extends StatelessWidget {
   const MyLogin({Key? key}) : super(key: key);
+  BluetoothDevice setDeviceToTrack(BluetoothDevice dev) {
+    InitialDevices().tracked = dev;
+    return dev;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,29 +61,12 @@ class MyLogin extends StatelessWidget {
                     CupertinoButton(
                       color: Colors.blue,
                       child: Text(
-                        'Connect',
+                        'Select',
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: devices.isConnected(devices.devicesList[index])
-                          ? null
-                          : () async {
-                              flutterBlue.stopScan();
-                              try {
-                                await devices.devicesList[index].connect();
-                              } catch (e) {
-                                // if (e.code != 'already_connected') {
-                                //   throw e;
-                                // }
-                                print(e);
-                              } finally {
-                                _services = await devices.devicesList[index]
-                                    .discoverServices();
-                              }
-
-                              devices.addConnectedDeviceTolist(
-                                  devices.devicesList[index], _services);
-                            },
-                    ),
+                      onPressed: () =>
+                          setDeviceToTrack(devices.devicesList[index]),
+                    )
                   ],
                 ),
               );

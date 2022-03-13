@@ -5,7 +5,7 @@ import 'dart:collection';
 
 class InitialDevices extends ChangeNotifier {
   late BluetoothDevice _devices;
-
+  late BluetoothDevice tracked;
   final FlutterBlue flutterBlue = FlutterBlue.instance;
   List<BluetoothDevice> devicesList = <BluetoothDevice>[];
 
