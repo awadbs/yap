@@ -13,6 +13,7 @@ class MyLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FlutterBlue flutterBlue = FlutterBlue.instance;
     List<BluetoothService> _services;
     // once pressed, will navigate to the bluetooth next page.
     _goToNextPage() {
@@ -21,7 +22,6 @@ class MyLogin extends StatelessWidget {
 
     // this creates a scan for devices
     scanForDevices() {
-      FlutterBlue flutterBlue = FlutterBlue.instance;
       var initDevices = context.read<InitialDevices>();
 
       flutterBlue.startScan(timeout: Duration(seconds: 2));
@@ -32,8 +32,6 @@ class MyLogin extends StatelessWidget {
       });
       print("end of scan list ");
       print(initDevices.devicesList.length);
-
-      flutterBlue.stopScan();
     }
 
     Consumer buildListView() {
@@ -107,6 +105,7 @@ class MyLogin extends StatelessWidget {
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () async {
+                        flutterBlue.stopScan();
                         try {
                           await devices.devicesList[index].connect();
                         } catch (e) {
