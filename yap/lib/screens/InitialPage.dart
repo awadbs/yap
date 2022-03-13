@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:yap/models/InitialDevices.dart';
-import 'package:yap/models/Person.dart';
+import 'package:yap/models/ListServices.dart';
 
 class MyLogin extends StatelessWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -104,23 +104,25 @@ class MyLogin extends StatelessWidget {
                         'Connect',
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () async {
-                        flutterBlue.stopScan();
-                        try {
-                          await devices.devicesList[index].connect();
-                        } catch (e) {
-                          // if (e.code != 'already_connected') {
-                          //   throw e;
-                          // }
-                          print(e);
-                        } finally {
-                          _services = await devices.devicesList[index]
-                              .discoverServices();
-                        }
+                      onPressed: devices.isConnected(devices.devicesList[index])
+                          ? null
+                          : () async {
+                              flutterBlue.stopScan();
+                              try {
+                                await devices.devicesList[index].connect();
+                              } catch (e) {
+                                // if (e.code != 'already_connected') {
+                                //   throw e;
+                                // }
+                                print(e);
+                              } finally {
+                                _services = await devices.devicesList[index]
+                                    .discoverServices();
+                              }
 
-                        devices.addConnectedDeviceTolist(
-                            devices.devicesList[index]);
-                      },
+                              devices.addConnectedDeviceTolist(
+                                  devices.devicesList[index], _services);
+                            },
                     ),
                   ],
                 ),
@@ -129,10 +131,6 @@ class MyLogin extends StatelessWidget {
           );
         },
       );
-    }
-
-    Text buildAListView(Person p) {
-      return Text(p.age.toString());
     }
 
     // container for display. main.
