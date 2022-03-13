@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:provider/provider.dart';
 
 class InitialDevices extends ChangeNotifier {
   late BluetoothDevice _devices;

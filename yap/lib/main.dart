@@ -7,6 +7,7 @@ import 'dart:math';
 // our pages
 import 'package:yap/screens/InitialPage.dart';
 import 'package:yap/models/InitialDevices.dart';
+import 'package:yap/models/Person.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => InitialDevices()),
+          ChangeNotifierProvider(create: (context) => Person()),
         ],
         child: CupertinoApp(
           title: 'Yap',

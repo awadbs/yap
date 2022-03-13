@@ -6,15 +6,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:yap/models/InitialDevices.dart';
+import 'package:yap/models/Person.dart';
 
 class MyLogin extends StatelessWidget {
   const MyLogin({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const twoDevicesConnected = false;
-    var initDevices = context.read<InitialDevices>();
-    bool areTwoConnected = initDevices.areTwoDevicesConnected();
     List<BluetoothService> _services;
     // once pressed, will navigate to the bluetooth next page.
     _goToNextPage() {
@@ -24,6 +22,7 @@ class MyLogin extends StatelessWidget {
     // this creates a scan for devices
     scanForDevices() {
       FlutterBlue flutterBlue = FlutterBlue.instance;
+      var initDevices = context.read<InitialDevices>();
 
       flutterBlue.startScan(timeout: Duration(seconds: 2));
       flutterBlue.scanResults.listen((List<ScanResult> results) {
@@ -40,8 +39,10 @@ class MyLogin extends StatelessWidget {
     Consumer buildListView() {
       return Consumer<InitialDevices>(
         builder: (context, devices, child) {
+          /*
+          print("my list..." + devices.devicesList.length.toString());
           List<Container> containers = <Container>[];
-          for (BluetoothDevice device in initDevices.devicesList) {
+          for (BluetoothDevice device in devices.devicesList) {
             Container(
               height: 50,
               child: Row(
@@ -74,24 +75,65 @@ class MyLogin extends StatelessWidget {
                         _services = await device.discoverServices();
                       }
 
-                      initDevices.addConnectedDeviceTolist(device);
+                      devices.addConnectedDeviceTolist(device);
                     },
                   ),
                 ],
               ),
             );
-          }
+          }*/
 
-          return ListView(
-            padding: const EdgeInsets.all(8),
-            shrinkWrap: true, // <- added
-            primary: false, // <- added
-            children: <Widget>[
-              ...containers,
-            ],
+          return ListView.builder(
+            itemCount: devices.devicesList.length,
+            itemBuilder: (context, index) {
+              return Container(
+                height: 100,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          Text(devices.devicesList[index].name == ''
+                              ? '(No Device Name)'
+                              : devices.devicesList[index].name),
+                          Text(devices.devicesList[index].id.toString()),
+                        ],
+                      ),
+                    ),
+                    CupertinoButton(
+                      color: Colors.blue,
+                      child: Text(
+                        'Connect',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () async {
+                        try {
+                          await devices.devicesList[index].connect();
+                        } catch (e) {
+                          // if (e.code != 'already_connected') {
+                          //   throw e;
+                          // }
+                          print(e);
+                        } finally {
+                          _services = await devices.devicesList[index]
+                              .discoverServices();
+                        }
+
+                        devices.addConnectedDeviceTolist(
+                            devices.devicesList[index]);
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
           );
         },
       );
+    }
+
+    Text buildAListView(Person p) {
+      return Text(p.age.toString());
     }
 
     // container for display. main.
@@ -103,7 +145,8 @@ class MyLogin extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SingleChildScrollView(
+                Container(
+                  height: 300,
                   child: buildListView(),
                 ),
                 const SizedBox(height: 30),
@@ -113,7 +156,9 @@ class MyLogin extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 CupertinoButton.filled(
-                  onPressed: (!areTwoConnected ? null : () => _goToNextPage()),
+                  onPressed: (!devices.areTwoDevicesConnected()
+                      ? null
+                      : () => _goToNextPage()),
                   child: Text('Continue'),
                 ),
               ],
