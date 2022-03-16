@@ -4,3 +4,5 @@ Yap is an IOS Application developed with Flutter to be used to locate victims lo
 
 A connection is made with two other devices and target location is triangulated using Bluetooth RSSI signals.
 Based on paper by Park, et. al. (2016) https://journals.sagepub.com/doi/full/10.1177/1550147716671720
+
+Submitted for Patriothacks 2022 hackathon. Authors: @AaronKim10 @alexlab963 @awadbs 
